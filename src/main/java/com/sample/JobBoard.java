@@ -1,15 +1,14 @@
 package com.sample;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JobBoard {
     private WebDriver driver;
@@ -40,12 +39,35 @@ public class JobBoard {
             locationInput.sendKeys(Keys.BACK_SPACE);
         }
         locationInput.sendKeys(location);
-
         driver.findElement(By.xpath("//button[contains(text(),'Search')]")).click();
         driver.findElement(By.xpath("//button[@id='filter-dateposted']")).click();
         driver.findElement(By.xpath("//a[contains(text(),'Last 24 hours')]")).click();
 
     }
+
+    public String getURL() {
+        return driver.getCurrentUrl();
+    }
+
+    public List<WebElement> getJobPost() {
+        List<WebElement> jobPosts = driver.findElements(By.cssSelector(".job_seen_beacon .resultContent "));
+        for(WebElement job: jobPosts) {
+            WebElement jobTitleElement = job.findElement(By.cssSelector(".jobTitle a span"));
+            WebElement jobCompanyElement = job.findElement(By.cssSelector(".job_seen_beacon .resultContent .company_location div span"));
+            System.out.println(jobTitleElement.getAttribute("title"));
+            System.out.println(jobCompanyElement.getText());
+            try {
+                WebElement jobSalaryElement = job.findElement(By.cssSelector(".job_seen_beacon .resultContent .salary-snippet-container div"));
+                System.out.println(jobSalaryElement.getText());
+            } catch (NoSuchElementException exp) {
+                System.out.println("Job doesn't provide salary data");
+            }
+
+        }
+        return jobPosts;
+    }
+
+
 
 
 
