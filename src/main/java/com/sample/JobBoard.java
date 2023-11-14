@@ -49,22 +49,35 @@ public class JobBoard {
         return driver.getCurrentUrl();
     }
 
-    public List<WebElement> getJobPost() {
-        List<WebElement> jobPosts = driver.findElements(By.cssSelector(".job_seen_beacon .resultContent "));
+    public List<JobData> getJobPost() {
+        List<WebElement> jobPosts = driver.findElements(By.cssSelector(".job_seen_beacon .resultContent"));
+        List<JobData> jobDataList = new ArrayList<>();
         for(WebElement job: jobPosts) {
+            JobData jobData = new JobData();
             WebElement jobTitleElement = job.findElement(By.cssSelector(".jobTitle a span"));
             WebElement jobCompanyElement = job.findElement(By.cssSelector(".job_seen_beacon .resultContent .company_location div span"));
-            System.out.println(jobTitleElement.getAttribute("title"));
-            System.out.println(jobCompanyElement.getText());
+            //System.out.println(jobTitleElement.getAttribute("title"));
+            jobData.setTitle(jobTitleElement.getAttribute("title"));
+            //System.out.println(jobCompanyElement.getText());
+            jobData.setCompany(jobCompanyElement.getText());
             try {
                 WebElement jobSalaryElement = job.findElement(By.cssSelector(".job_seen_beacon .resultContent .salary-snippet-container div"));
-                System.out.println(jobSalaryElement.getText());
+                //System.out.println(jobSalaryElement.getText());
+                jobData.setSalary(jobSalaryElement.getText());
             } catch (NoSuchElementException exp) {
-                System.out.println("Job doesn't provide salary data");
+                //System.out.println("Job doesn't provide salary data");
+                jobData.setSalary("No data provided");
             }
-
+            jobDataList.add(jobData);
         }
-        return jobPosts;
+        return jobDataList;
+    }
+
+    public void clickElement() {
+        WebElement tempClickPosition = driver.findElement(By.cssSelector(".job_seen_beacon .resultContent a"));
+        tempClickPosition.click();
+        System.out.println(driver.getCurrentUrl());
+        System.out.println(driver.findElement(By.id("jobDescriptionText")));
     }
 
 
