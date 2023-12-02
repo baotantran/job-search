@@ -14,7 +14,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         JobBoard jobBoard = new JobBoard();
         jobBoard.loadURL("https://www.indeed.com/");
-        jobBoard.inputTilteLocation("Test Engineer", "Seattle");
+        jobBoard.searchByTilteLocation("Test Engineer", "Seattle");
+        jobBoard.filterSelection();
         List<JobData> jobDataList = jobBoard.getJobPost();
         jobBoard.clickElement();
         for (JobData job: jobDataList) {

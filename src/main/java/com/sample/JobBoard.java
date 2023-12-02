@@ -32,17 +32,19 @@ public class JobBoard {
         }
     }
 
-    public void inputTilteLocation(String title, String location) {
-        driver.findElement(By.xpath("//input[@name=\"q\"]")).sendKeys(title);
+    public void searchByTilteLocation(String title, String location) {
+        this.driver.findElement(By.xpath("//input[@name=\"q\"]")).sendKeys(title);
         WebElement locationInput = driver.findElement(By.xpath("//input[@name=\"l\"]"));
         for (int i = 0; i < 15; i++) {
             locationInput.sendKeys(Keys.BACK_SPACE);
         }
         locationInput.sendKeys(location);
-        driver.findElement(By.xpath("//button[contains(text(),'Search')]")).click();
-        driver.findElement(By.xpath("//button[@id='filter-dateposted']")).click();
-        driver.findElement(By.xpath("//a[contains(text(),'Last 24 hours')]")).click();
+        this.driver.findElement(By.xpath("//button[contains(text(),'Search')]")).click();
+    }
 
+    public void filterSelection() {
+        this.driver.findElement(By.xpath("//button[@id='filter-dateposted']")).click();
+        this.driver.findElement(By.xpath("//a[contains(text(),'Last 24 hours')]")).click();
     }
 
     public String getURL() {
@@ -56,16 +58,12 @@ public class JobBoard {
             JobData jobData = new JobData();
             WebElement jobTitleElement = job.findElement(By.cssSelector(".jobTitle a span"));
             WebElement jobCompanyElement = job.findElement(By.cssSelector(".job_seen_beacon .resultContent .company_location div span"));
-            //System.out.println(jobTitleElement.getAttribute("title"));
             jobData.setTitle(jobTitleElement.getAttribute("title"));
-            //System.out.println(jobCompanyElement.getText());
             jobData.setCompany(jobCompanyElement.getText());
             try {
                 WebElement jobSalaryElement = job.findElement(By.cssSelector(".job_seen_beacon .resultContent .salary-snippet-container div"));
-                //System.out.println(jobSalaryElement.getText());
                 jobData.setSalary(jobSalaryElement.getText());
             } catch (NoSuchElementException exp) {
-                //System.out.println("Job doesn't provide salary data");
                 jobData.setSalary("No data provided");
             }
             jobDataList.add(jobData);
